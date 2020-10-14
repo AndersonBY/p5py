@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+<head>
+    <title>p5py</title>
+    <meta name="keywords" content="Python, JavaScript, p5.js">
+    <meta name="description" content="">
+    <link href="https://cdn.bootcss.com/twitter-bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.bootcss.com/bootstrap-select/1.13.10/css/bootstrap-select.min.css" rel="stylesheet">
+    <style type="text/css" media="screen">
+        .ace_editor .ace_content span, .ace_editor .ace_content .ace_line {
+          font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'source-code-pro', monospace!important;
+        }
+        img {
+            max-width: 100%;
+        }
+        .btn-area {
+            height: 56px;
+            background-color: #2f3129;
+        }
+        .btn-area button {
+            float: left;
+            color: #fff;
+            border-radius: 0;
+            border-width: 0;
+            height: 100%;
+            width: 80px;
+        }
+        #run {
+            float: left;
+            background-color: #a7c336;
+            color: #fff;
+            border-radius: 0;
+            border-width: 0;
+            height: 100%;
+            width: 80px;
+        }
+        #save {
+            background-color: #6dddf2;
+        }
+        #open {
+            background-color: #f53855;
+        }
+        #share {
+            background-color: #a7c336;
+        }
+        .help-link-container a {
+          color: #fff;
+        }
+        .choose-container {
+            color: #fff;
+            padding-left: 5px;
+            padding-right: 5px;
+            display:flex;
+            display: -webkit-flex;
+            align-items:center;
+        }
+        .theme-choose {
+          color: #fff;
+          padding-left: 5px;
+          padding-right: 5px;
+          display:flex;
+          display: -webkit-flex;
+          align-items:center;
+        }
+        .code-container {
+            padding-left: 0;
+            padding-right: 0;
+        }
+        #editor {
+            padding-right:0;
+            padding-left: 0;
+        }
+        .console {
+          width: 100%;
+          height: 100%;
+          background-color: #000;
+          color: #FFF;
+          font-size: 20px;
+          font-weight: 700;
+          border-width: 0;
+          font-family: 'Monaco', 'Consolas';
+          padding: 8px 8px;
+        }
+        .modal-dialog {
+          max-width: 90%;
+        }
+        html,body {
+          height:100%;
+        }
+        body {
+          overflow: hidden;
+        }
+    </style>
+
+    <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?d0a2c7bcfb5001873f5fe6701b977610";
+      var s = document.getElementsByTagName("script")[0]; 
+      s.parentNode.insertBefore(hm, s);
+    })();
+    </script>
+
+</head>
+<body>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-8 code-container">
+            <div id="editor"></div>
+        </div>
+        <div class="col-md-4 pl-0 pr-0">
+          <textarea id="console" class="console" autocomplete="off">Initializing...</textarea>
+        </div>
+    </div>
+    <div class="row btn-area">
+        <button id="run" onclick="run()">> run</button>
+        <button id="save" onclick="save()">save</button>
+        <button id="open" onclick="performClick('file-input')">open</button>
+        <button id="share" onclick="share()">share</button>
+        <div class="choose-container theme-selector-container">
+            <span class="ml-2 mr-2">Theme: </span>
+            <select id="theme-selector" size="1" class="selectpicker" data-live-search="true" data-style="btn-success" data-width="100px">
+                <option value="ambiance">ambiance</option>
+                <option value="chaos">chaos</option>
+                <option value="chrome">chrome</option>
+                <option value="clouds">clouds</option>
+                <option value="clouds_midnight">clouds_midnight</option>
+                <option value="cobalt">cobalt</option>
+                <option value="crimson_editor">crimson_editor</option>
+                <option value="dawn">dawn</option>
+                <option value="dracula">dracula</option>
+                <option value="dreamweaver">dreamweaver</option>
+                <option value="eclipse">eclipse</option>
+                <option value="github">github</option>
+                <option value="gob">gob</option>
+                <option value="gruvbox">gruvbox</option>
+                <option value="idle_fingers">idle_fingers</option>
+                <option value="iplastic">iplastic</option>
+                <option value="katzenmilch">katzenmilch</option>
+                <option value="kr_theme">kr_theme</option>
+                <option value="kuroir">kuroir</option>
+                <option value="merbivore">merbivore</option>
+                <option value="merbivore_soft">merbivore_soft</option>
+                <option value="monokai">monokai</option>
+                <option value="mono_industrial">mono_industrial</option>
+                <option value="pastel_on_dark">pastel_on_dark</option>
+                <option value="solarized_dark">solarized_dark</option>
+                <option value="solarized_light">solarized_light</option>
+                <option value="sqlserver">sqlserver</option>
+                <option value="terminal">terminal</option>
+                <option value="textmate">textmate</option>
+                <option value="tomorrow">tomorrow</option>
+                <option value="tomorrow_night">tomorrow_night</option>
+                <option value="tomorrow_night_blue">tomorrow_night_blue</option>
+                <option value="tomorrow_night_bright">tomorrow_night_bright</option>
+                <option value="tomorrow_night_eighties">tomorrow_night_eighties</option>
+                <option value="twilight">twilight</option>
+                <option value="vibrant_ink">vibrant_ink</option>
+                <option value="xcode">xcode</option>
+            </select>
+        </div>
+        <div class="help-link-container my-auto">
+          <a id="about" onclick="$('#about-modal').modal('show')" href="#">About p5py</a>
+        </div>
+        <input id="file-input" type="file" style="position:fixed;top:-1000px;"/>
+    </div>
+</div>
+<div class="modal fade" id="share-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Share your code</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body text-center">
+        <div id="qrcode" style="margin-left:auto; margin-right:auto; margin-bottom: 20px;"></div>
+        <p>You can save this picture or scan the QR code to share it.</p>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-default" type="button" data-dismiss="modal">close</button></div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="canvas-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog" style="width: 100%">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Preview</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body text-center">
+        <div id="p5Canvas"></div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" type="button" data-dismiss="modal">close</button></div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="about-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog" style="width: 100%">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">About</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body text-center">
+        <h3>About p5py</h3>
+        <hr>
+        <p>P5py.com lets you write p5.js programs in python. </p>
+        <p>We use brython to translate your python program into javascript to use p5.js and other javascript libraries.</p>
+        <p>Looking forward to your feedbacks.</p>
+        <a href="https://github.com/AndersonBY/p5py">github link</a>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" type="button" data-dismiss="modal">close</button></div>
+    </div>
+  </div>
+</div>
+
+<script src="{% static '/js/ace/ace.js' %}" type="text/javascript"></script>
+<script src="{% static '/js/ace/ext-language_tools.js' %}" type="text/javascript"></script>
+<script src="{% static '/js/ace/mode-python3.js' %}" type="text/javascript"></script>
+<script src="//cdn.bootcss.com/jquery/3.4.0/jquery.min.js"></script>
+<script type="text/javascript" src="{% static '/js/FileSaver.min.js' %}"></script>
+<script src="https://cdn.bootcss.com/jquery.qrcode/1.0/jquery.qrcode.min.js"></script>
+<script src="https://cdn.bootcss.com/html2canvas/0.5.0-beta4/html2canvas.min.js"></script>
+<script src="https://cdn.bootcss.com/popper.js/1.15.0/umd/popper.min.js"></script>
+<script src="https://cdn.bootcss.com/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
+<script src="https://cdn.bootcss.com/bootstrap-select/1.13.10/js/bootstrap-select.min.js"></script>
+
+<!-- <script src="{% static '/js/brython3.8.1/brython.js' %}" type="text/javascript"></script> -->
+<script src="{% static '/js/brython3.8.1/brython_builtins.js' %}" type="text/javascript"></script>
+<script src="{% static '/js/brython3.8.1/version_info.js' %}" type="text/javascript"></script>
+<script src="{% static '/js/brython3.8.1/py2js.js' %}" type="text/javascript"></script>
+<script src="{% static '/js/brython3.8.1/loaders.js' %}" type="text/javascript"></script>
+<script src="{% static '/js/brython3.8.1/py_object.js' %}" type="text/javascript"></script>
+<script src="{% static '/js/brython3.8.1/py_type.js' %}" type="text/javascript"></script>
+<script src="{% static '/js/brython3.8.1/py_utils.js' %}" type="text/javascript"></script>
+<script src="{% static '/js/brython3.8.1/py_sort.js' %}" type="text/javascript"></script>
+<script src="{% static '/js/brython3.8.1/py_builtin_functions.js' %}" type="text/javascript"></script>
+<script src="{% static '/js/brython3.8.1/py_exceptions.js' %}" type="text/javascript"></script>
+<script src="{% static '/js/brython3.8.1/py_range_slice.js' %}" type="text/javascript"></script>
+<script src="{% static '/js/brython3.8.1/py_bytes.js' %}" type="text/javascript"></script>
+<script src="{% static '/js/brython3.8.1/py_set.js' %}" type="text/javascript"></script>
+<script src="{% static '/js/brython3.8.1/js_objects.js' %}" type="text/javascript"></script>
+<script src="{% static '/js/brython3.8.1/stdlib_paths.js' %}" type="text/javascript"></script>
+<script src="{% static '/js/brython3.8.1/py_import.js' %}" type="text/javascript"></script>
+<script src="{% static '/js/brython3.8.1/unicode_data.js' %}" type="text/javascript"></script>
+<script src="{% static '/js/brython3.8.1/py_string.js' %}" type="text/javascript"></script>
+<script src="{% static '/js/brython3.8.1/py_int.js' %}" type="text/javascript"></script>
+<script src="{% static '/js/brython3.8.1/py_long_int.js' %}" type="text/javascript"></script>
+<script src="{% static '/js/brython3.8.1/py_float.js' %}" type="text/javascript"></script>
+<script src="{% static '/js/brython3.8.1/py_complex.js' %}" type="text/javascript"></script>
+<script src="{% static '/js/brython3.8.1/py_dict.js' %}" type="text/javascript"></script>
+<script src="{% static '/js/brython3.8.1/py_list.js' %}" type="text/javascript"></script>
+<script src="{% static '/js/brython3.8.1/py_generator.js' %}" type="text/javascript"></script>
+<script src="{% static '/js/brython3.8.1/py_dom.js' %}" type="text/javascript"></script>
+<script src="{% static '/js/brython3.8.1/builtin_modules.js' %}" type="text/javascript"></script>
+<script src="{% static '/js/brython3.8.1/py_import_hooks.js' %}" type="text/javascript"></script>
+<script src="{% static '/js/brython3.8.1/async.js' %}" type="text/javascript"></script>
+<script src="{% static '/js/brython3.8.1/brython_stdlib.js' %}" type="text/javascript"></script>
+<script src="{% static '/js/p5/p5.min.js' %}" type="text/javascript" ></script>
+<script src="{% static '/js/p5/p5.sound.min.js' %}" type="text/javascript" ></script>
+
+<script src="{% static '/py/editor.py' %}" type="text/python3" ></script>
+<script>
+  var editor;
+  window.onload = function() {
+    brython();
+    $("#editor")[0].style.height = String(window.innerHeight - 56) + "px";
+    $('#theme-selector').selectpicker('val', 'monokai');
+    ace.config.set("basePath", "{% static '/js/ace/' %}");
+    editor = ace.edit("editor");
+    editor.setTheme("ace/theme/monokai");
+    editor.session.setMode("ace/mode/python");
+    editor.setOptions({
+      fontSize: "20pt"
+    });
+    var src = '{{code|escape}}'.replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/&#39;/g, "'");
+    editor.setValue(src);
+  }
+    
+  $('#theme-selector').on('changed.bs.select', function (e, clickedIndex, isSelected, previousValue) {
+      if (null != clickedIndex) {
+          var theme = $('#theme-selector option')[clickedIndex].getAttribute('value');
+          editor.setTheme("ace/theme/" + theme);
+      }
+  });
+
+  function run() {
+    var code = editor.getValue();
+    if (code.search('createCanvas') >=0 || code.search('background') >= 0) {
+      $('#canvas-modal').modal('show');
+    }
+  }
+    
+  function performClick(elemId) {
+    var elem = document.getElementById(elemId);
+    if(elem && document.createEvent) {
+      var evt = document.createEvent("MouseEvents");
+      evt.initEvent("click", true, false);
+      elem.dispatchEvent(evt);
+    }
+  }
+  function readSingleFile(e) {
+    var file = e.target.files[0];
+    if (!file) {
+      return;
+    }
+    var reader = new FileReader();
+    reader.onload = function(e) {
+      var contents = e.target.result;
+      var editor = window.ace.edit("editor");
+      editor.setValue(contents);
+    };
+    reader.readAsText(file);
+  }
+  function save(){
+    var editor = ace.edit("editor");
+    var code = editor.getValue();
+    var blob = new Blob([code], {type: "text/plain;charset=utf-8"});
+    saveAs(blob, "p5py.py");
+  }
+  function share() {
+    var editor = ace.edit("editor");
+    var code = editor.getValue();
+    $.ajax({
+        type: 'post',
+        url: 'upload_code',
+        dataType: 'json',
+        data: {code: code, language: 'python'},
+        success: function(d){
+          var codeUrl = window.location.origin + "/?id="+d.project_id
+          jQuery('#qrcode').qrcode(codeUrl);
+
+          $('.modal-title').html('Code link：<a href="' + codeUrl + '">' + codeUrl + '</a>');
+          var canvas = $('#qrcode canvas')[0];
+          var qrcode_src = canvas.toDataURL('image/jpg');
+          $('#qrcode').html('')
+          
+          html2canvas(document.querySelector("#editor")).then(canvas => {
+              var ctx = canvas.getContext('2d');
+              var img = new Image();
+              img.src = qrcode_src;
+              img.onload = function(){
+                ctx.globalAlpha = 1;
+                ctx.drawImage(img, canvas.width-img.width-10, 10);
+                var imgElement = document.createElement("img");
+                imgElement.src = canvas.toDataURL('image/png');
+                document.getElementById("qrcode").appendChild(imgElement);
+              }
+          });
+          $('#share-modal').modal('show')
+        }
+    })
+  }
+
+  document.getElementById('file-input').addEventListener('change', readSingleFile, false);
+</script>
+</body>
+</html>
